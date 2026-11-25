@@ -91,7 +91,7 @@ h2{font-size:14px;margin:0 0 10px;letter-spacing:-.01em}
 .wk{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .wk span{font:600 20px var(--ta);background:var(--bs);color:var(--bad);border-radius:10px;padding:4px 10px}
 .wk small{font:600 11px var(--f);margin-left:4px}
-.hr{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:6px;font-size:12.5px;padding:8px 0;border-top:1px solid var(--bd);color:var(--ts);font-variant-numeric:tabular-nums}
+.hr{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:6px;font-size:12.5px;padding:8px 0;border-top:1px solid var(--bd);color:var(--ts);font-variant-numeric:tabular-nums}
 .hr:first-of-type{border-top:0}.hr b{color:var(--tx)}
 ul.r{margin:0;padding-left:18px;font-size:13.5px;line-height:1.7;color:var(--ts)}
 .lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:6px}
@@ -358,7 +358,7 @@ return{apply:apply,toggle:toggle}})();
 var ROOT=document.getElementById('a1');var $=function(s){return ROOT.querySelector(s)};
 var PU='\u0BCD',SRI='\u0BB8\u0BCD\u0BB0\u0BC0',SRI2='\u0BB6\u0BCD\u0BB0\u0BC0',KSH='\u0B95\u0BCD\u0BB7',AY='\u0B83';
 var M={q:'ஆ',w:'ஈ',e:'ஊ',r:'ஐ',t:'ஏ',y:'ள',u:'ற',i:'ன',o:'ட',p:'ண','[':'ச',']':'ஞ',a:'அ',s:'இ',d:'உ',f:'்',g:'எ',h:'க',j:'ப',k:'ம',l:'த',';':'ந',"'":'ய',z:'ஔ',x:'ஓ',c:'ஒ',v:'வ',b:'ங',n:'ல',m:'ர','/':'ழ'};
-var S={q:'ஸ',w:'ஷ',e:'ஜ',r:'ஹ',t:KSH,y:SRI,a:AY};
+var S={q:'ஸ',w:'ஷ',e:'ஜ',r:'ஹ',t:KSH,y:SRI,a:AY,';':';'};
 var ROWS=['qwertyuiop[]',"asdfghjkl;'",'zxcvbnm/'];
 var SIGNS=['ஆ','இ','ஈ','உ','ஊ','எ','ஏ','ஐ','ஒ','ஓ','ஔ'];
 var SG={'ஆ':'ா','இ':'ி','ஈ':'ீ','உ':'ு','ஊ':'ூ','எ':'ெ','ஏ':'ே','ஐ':'ை','ஒ':'ொ','ஓ':'ோ','ஔ':'ௌ'},SGI={},R={};
@@ -463,7 +463,7 @@ function back(){if(!r||r.lock)return;r.buf=r.buf.slice(0,-1);render()}
 function skip(){if(!r||r.done||r.lock)return;addMiss(r.q[r.i]);r.combo=0;r.i++;r.buf='';r.ib=0;if(r.i>=r.q.length)finish();else render()}
 function finish(){r.done=true;clearInterval(tm);
  var s=r.t0?(Date.now()-r.t0)/1000:1,cpm=Math.round(r.chars/Math.max(s,1)*60);
- D.hist.push({t:Date.now(),l:D.o.lv,a:acc(r.ok,r.bad),s:Math.round(s),c:cpm,n:r.q.length,m:r.miss.length});
+ D.hist.push({t:Date.now(),l:D.o.lv,a:acc(r.ok,r.bad),s:Math.round(s),c:cpm,w:Math.round(cpm/5),n:r.q.length,m:r.miss.length});
  if(D.hist.length>30)D.hist.shift();D.rounds++;
  // clean round (no wrong key, no skip) -> go to the next mode by itself
  var clean=!r.custom&&r.bad===0&&r.miss.length===0;
@@ -507,7 +507,7 @@ function stats(){var d=new Date(),s=0;for(;;){var k=dstr(d);if(D.days[k]>0){s++;
  var hs=D.hist,avg=hs.length?Math.round(hs.reduce(function(a,b){return a+b.c},0)/hs.length):0;
  var h='<div class="box"><h2>Daily goal</h2><div class="bar"><i style="width:'+Math.min(100,tdy/D.goal*100)+'%"></i></div><div class="meta"><span>'+tdy+' of '+D.goal+' items today</span><span><select id="gl" class="ch">'+[25,50,100,200,500].map(function(g){return'<option'+(g===D.goal?' selected':'')+'>'+g+'</option>'}).join('')+'</select></span></div></div>'+
  '<div class="st"><div><b>'+s+'</b><span>Day streak</span></div><div><b>'+D.best+'</b><span>Best combo</span></div><div><b>'+acc(D.ok,D.bad)+'%</b><span>Overall accuracy</span></div><div><b>'+D.tot+'</b><span>Items typed</span></div><div><b>'+D.rounds+'</b><span>Rounds finished</span></div><div><b>'+avg+'</b><span>Avg letters per minute</span></div></div>';
- h+='<div class="box"><h2>Recent rounds</h2>'+(hs.length?'<div class="hr"><b>Level</b><b>Accuracy</b><b>Time</b><b>LPM</b></div>'+hs.slice(-8).reverse().map(function(x){return'<div class="hr"><span>'+(LV[x.l]?LV[x.l].n:'-')+'</span><span>'+x.a+'%</span><span>'+fmt(x.s)+'</span><span>'+x.c+'</span></div>'}).join(''):'<p class="note" style="margin:0">Finished rounds appear here. New rounds start by themselves.</p>')+'</div>';
+ h+='<div class="box"><h2>Recent rounds</h2>'+(hs.length?'<div class="hr"><b>Level</b><b>Accuracy</b><b>Time</b><b>LPM</b><b>WPM</b></div>'+hs.slice(-8).reverse().map(function(x){return'<div class="hr"><span>'+(LV[x.l]?LV[x.l].n:'-')+'</span><span>'+x.a+'%</span><span>'+fmt(x.s)+'</span><span>'+x.c+'</span><span>'+(x.w!=null?x.w:Math.round(x.c/5))+'</span></div>'}).join(''):'<p class="note" style="margin:0">Finished rounds appear here. New rounds start by themselves.</p>')+'</div>';
  h+='<div class="box"><h2>Weak items</h2>'+(wk.length?'<div class="wk">'+wk.map(function(w){return'<span>'+w+'<small>'+D.wrong[w]+'</small></span>'}).join('')+'</div><div class="ro"><button class="btn pr" id="pw">Practise weak items</button><button class="btn" id="rs">Reset stats</button></div>':'<p class="note" style="margin:0">No weak items right now. A clean answer lowers the count by one.</p><div class="ro"><button class="btn" id="rs">Reset stats</button></div>')+'</div>';
  $('#p3').innerHTML=h;
  var g=$('#gl');if(g)g.onchange=function(){D.goal=+g.value;save();stats();render()};
@@ -546,6 +546,7 @@ $('#cg').onclick=function(e){var b=e.target.closest('button');if(!b)return;
 document.addEventListener('keydown',function(e){if(e.ctrlKey||e.metaKey||e.altKey||ROOT.hidden||!$('#p0').classList.contains('on'))return;
  var k=e.key;if(k==='Backspace'){e.preventDefault();back();return}if(k==='Enter'){e.preventDefault();skip();return}if(k==='Escape'){start();return}if(k===' '){e.preventDefault();inp(' ');return}
  if(e.shiftKey&&(e.code==='KeyT'||e.code==='KeyY')){e.preventDefault();inp(e.code==='KeyT'?KSH:SRI);return}
+ if(e.shiftKey&&e.code==='Semicolon'){e.preventDefault();inp(';');return}
  if(k.length>1){if(TKI[k]){e.preventDefault();inp(TKI[k])}return}
  var c=k.charCodeAt(0);
  if(c>=0x0B80&&c<=0x0BFF){e.preventDefault();inp(k);return}
@@ -573,7 +574,7 @@ theme();ops();start();stats();
 var ROOT=document.getElementById('a2');var $=function(s){return ROOT.querySelector(s)};
 var PU='\u0BCD',SRI='\u0BB8\u0BCD\u0BB0\u0BC0',SRI2='\u0BB6\u0BCD\u0BB0\u0BC0',KSH='\u0B95\u0BCD\u0BB7',AY='\u0B83';
 var M={q:'ஆ',w:'ஈ',e:'ஊ',r:'ஐ',t:'ஏ',y:'ள',u:'ற',i:'ன',o:'ட',p:'ண','[':'ச',']':'ஞ',a:'அ',s:'இ',d:'உ',f:'்',g:'எ',h:'க',j:'ப',k:'ம',l:'த',';':'ந',"'":'ய',z:'ஔ',x:'ஓ',c:'ஒ',v:'வ',b:'ங',n:'ல',m:'ர','/':'ழ'};
-var S={q:'ஸ',w:'ஷ',e:'ஜ',r:'ஹ',t:KSH,y:SRI,a:AY};
+var S={q:'ஸ',w:'ஷ',e:'ஜ',r:'ஹ',t:KSH,y:SRI,a:AY,';':';'};
 var ROWS=['qwertyuiop[]',"asdfghjkl;'",'zxcvbnm/'];
 var SIGNS=['ஆ','இ','ஈ','உ','ஊ','எ','ஏ','ஐ','ஒ','ஓ','ஔ'];
 var SG={'ஆ':'ா','இ':'ி','ஈ':'ீ','உ':'ு','ஊ':'ூ','எ':'ெ','ஏ':'ே','ஐ':'ை','ஒ':'ொ','ஓ':'ோ','ஔ':'ௌ'},SGI={},R={};
@@ -667,7 +668,7 @@ function back(){if(!r||r.lock)return;r.buf=r.buf.slice(0,-1);r.h='';render()}
 function skip(){if(!r||r.done||r.lock)return;addMiss(r.q[r.i]);r.combo=0;r.i++;r.buf='';r.h='';r.ib=0;if(r.i>=r.q.length)finish();else render()}
 function finish(){r.done=true;clearInterval(tm);
  var s=r.t0?(Date.now()-r.t0)/1000:1,cpm=Math.round(r.chars/Math.max(s,1)*60);
- D.hist.push({t:Date.now(),l:D.o.lv,a:acc(r.ok,r.bad),s:Math.round(s),c:cpm,n:r.q.length,m:r.miss.length});
+ D.hist.push({t:Date.now(),l:D.o.lv,a:acc(r.ok,r.bad),s:Math.round(s),c:cpm,w:Math.round(cpm/5),n:r.q.length,m:r.miss.length});
  if(D.hist.length>30)D.hist.shift();D.rounds++;
  var clean=!r.custom&&r.bad===0&&r.miss.length===0;
  if(clean){var L=LV[D.o.lv],gi=D.o.row===''?-1:+D.o.row;
@@ -710,7 +711,7 @@ function stats(){var d=new Date(),s=0;for(;;){var k=dstr(d);if(D.days[k]>0){s++;
  var hs=D.hist,avg=hs.length?Math.round(hs.reduce(function(a,b){return a+b.c},0)/hs.length):0;
  var h='<div class="box"><h2>Daily goal</h2><div class="bar"><i style="width:'+Math.min(100,tdy/D.goal*100)+'%"></i></div><div class="meta"><span>'+tdy+' of '+D.goal+' items today</span><span><select id="gl" class="ch">'+[25,50,100,200,500].map(function(g){return'<option'+(g===D.goal?' selected':'')+'>'+g+'</option>'}).join('')+'</select></span></div></div>'+
  '<div class="st"><div><b>'+s+'</b><span>Day streak</span></div><div><b>'+D.best+'</b><span>Best combo</span></div><div><b>'+acc(D.ok,D.bad)+'%</b><span>Overall accuracy</span></div><div><b>'+D.tot+'</b><span>Items typed</span></div><div><b>'+D.rounds+'</b><span>Rounds finished</span></div><div><b>'+avg+'</b><span>Avg letters per minute</span></div></div>';
- h+='<div class="box"><h2>Recent rounds</h2>'+(hs.length?'<div class="hr"><b>Level</b><b>Accuracy</b><b>Time</b><b>LPM</b></div>'+hs.slice(-8).reverse().map(function(x){return'<div class="hr"><span>'+(LV[x.l]?LV[x.l].n:'-')+'</span><span>'+x.a+'%</span><span>'+fmt(x.s)+'</span><span>'+x.c+'</span></div>'}).join(''):'<p class="note" style="margin:0">Finished rounds appear here. New rounds start by themselves.</p>')+'</div>';
+ h+='<div class="box"><h2>Recent rounds</h2>'+(hs.length?'<div class="hr"><b>Level</b><b>Accuracy</b><b>Time</b><b>LPM</b><b>WPM</b></div>'+hs.slice(-8).reverse().map(function(x){return'<div class="hr"><span>'+(LV[x.l]?LV[x.l].n:'-')+'</span><span>'+x.a+'%</span><span>'+fmt(x.s)+'</span><span>'+x.c+'</span><span>'+(x.w!=null?x.w:Math.round(x.c/5))+'</span></div>'}).join(''):'<p class="note" style="margin:0">Finished rounds appear here. New rounds start by themselves.</p>')+'</div>';
  h+='<div class="box"><h2>Weak items</h2>'+(wk.length?'<div class="wk">'+wk.map(function(w){return'<span>'+w+'<small>'+D.wrong[w]+'</small></span>'}).join('')+'</div><div class="ro"><button class="btn pr" id="pw">Practise weak items</button><button class="btn" id="rs">Reset stats</button></div>':'<p class="note" style="margin:0">No weak items right now. A clean answer lowers the count by one.</p><div class="ro"><button class="btn" id="rs">Reset stats</button></div>')+'</div>';
  $('#p3').innerHTML=h;
  var g=$('#gl');if(g)g.onchange=function(){D.goal=+g.value;save();stats();render()};
@@ -736,6 +737,7 @@ $('#cg').onclick=function(e){var b=e.target.closest('button');if(!b||!b.dataset.
 document.addEventListener('keydown',function(e){if(e.ctrlKey||e.metaKey||e.altKey||ROOT.hidden||!$('#p0').classList.contains('on'))return;
  var k=e.key;if(k==='Backspace'){e.preventDefault();back();return}if(k==='Enter'){e.preventDefault();skip();return}if(k==='Escape'){start();return}if(k===' '){e.preventDefault();inp(' ');return}
  if(e.shiftKey&&(e.code==='KeyT'||e.code==='KeyY')){e.preventDefault();inp(e.code==='KeyT'?KSH:SRI);return}
+ if(e.shiftKey&&e.code==='Semicolon'){e.preventDefault();inp(';');return}
  if(k.length>1){if(TKI[k]){e.preventDefault();inp(TKI[k])}return}
  var c=k.charCodeAt(0);
  if(c>=0x0B80&&c<=0x0BFF){e.preventDefault();inp(k);return}
